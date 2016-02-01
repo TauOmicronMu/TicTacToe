@@ -17,4 +17,11 @@ public class Constants {
 		System.err.println(errorMessage);
 		System.exit(errorNumber);
     }
+    
+    public static final int CLIENT_ARGS_ERROR = 1;
+    public static final int INVALID_PORT_ERROR = 2;
+    public static final int UNKNOWN_HOST_ERROR = 3;
+    public static final int SERVER_NOT_RUNNING_ERROR = 4;
+    public static final int SERVER_START_ERROR = 5;
+    public static final int CLIENT_HANDLE_ERROR = 6;
 }
