@@ -53,6 +53,10 @@ public class ConnectedClientData {
 		this.connectedClients.get(nickname).addMessage(message);
 	}
 	
+	public synchronized Message getFirstClientMessage(String nickname) {
+		this.connectedClients.get(nickname);
+	}
+	
 	/**
 	 * Return an ArrayList containing the nicknames of all connected clients.
 	 * @return An ArrayList<String> containing the nicknames of all connected clients.
