@@ -1,3 +1,4 @@
+package example;
 // Usage:
 //        java Server
 //

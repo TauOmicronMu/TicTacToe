@@ -1,3 +1,4 @@
+package example;
 // Usage:
 //        java Client user-nickname hostname
 //

@@ -1,3 +1,4 @@
+package legacy;
 import java.util.HashMap;
 
 /**
