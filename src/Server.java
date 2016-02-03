@@ -33,6 +33,8 @@ public class Server {
 		while(true) {
 			try {
 		        Socket client = serverSocket.accept();
+		        
+		        //TODO : Create 2 threads for the client.
 			}
 			catch(IOException e) {
 				Constants.errorAndEnd("Something went wrong accepting a client connection (IO Exception). Please try again.");
