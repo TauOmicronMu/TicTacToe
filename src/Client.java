@@ -3,6 +3,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import com.sun.corba.se.impl.orbutil.closure.Constant;
+
+import example.ClientReceiver;
+
 /**
  * Class holding all of the logic for the client.
  * 
@@ -63,5 +67,79 @@ public class Client {
 		catch(IOException e){
 			Constants.errorAndEnd("Something went wrong opening the I/O Streams (I/O Exception). Please try again.");
 		}
+		
+		ClientSender sender = new ClientSender(nickname, toServer);
+		ClientReceiver receiver = new ClientReceiver(fromServer);
+		
+		sender.start();
+		receiver.start();
+	}
+    
+	/**
+	 * Handles sending Objects to the server.
+	 * @author TauOmicronMu
+	 *
+	 */
+	public static class ClientSender extends Thread {
+		
+		private String nickname;
+		private ObjectOutputStream server;
+		
+		public ClientSender(String nickname, ObjectOutputStream server){
+		    this.nickname = nickname;
+		    this.server = server;
+		}
+		
+		public void run() {
+			try {
+			    server.flush();
+			}
+			catch(IOException e) {
+				Constants.errorAndEnd("Error flushing I/O Stream in ClientSender (I/O Exception).");
+			}
+			/*
+			 * Attempt to tell the server the nickname. If the nickname is
+			 * free it will be assigned to the client, otherwise a number 
+			 * will be generated recursively and appended to the nickname.
+			 */
+			try {
+				server.writeUTF(nickname);
+		            
+				//TODO : Add the protocol here.  
+			}	
+			catch(IOException e) {
+				Constants.errorAndEnd("Error with communication in ClientSender (I/O Exception).");
+			}
+		}	
+	}
+	
+	/**
+	 * Handles receiving Objects from the server.
+	 * @author TauOmicronMu
+	 *
+	 */
+	public static class ClientReceiver extends Thread {
+		
+		private ObjectInputStream server;
+		
+		public ClientReceiver(ObjectInputStream server) {
+			this.server = server;
+		}
+		
+		public void run() {
+			
+			try {
+				//Tell the user what their username is.
+				System.out.println(this.server.readObject());
+				//TODO : Define protocol for the client given Messages from the server.
+			}
+			catch (IOException e) {
+				Constants.errorAndEnd("Error with communication in ClientReceiver (I/O Exception).");
+			}
+		}
 	}
 }
+
+	
+
+

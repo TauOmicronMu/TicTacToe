@@ -57,6 +57,15 @@ public class ConnectedClientData {
 		this.connectedClients.get(nickname);
 	}
 	
+	public void addNewClient(String nickname, ServerSender toClient, ServerReceiver fromClient) {
+		for(String name : getConnectedClients()) {
+			if(nickname == name) {
+				Constants.errorAndEnd("Server Error : Attempted to create a duplicate record.");
+			}
+		}
+		this.connectedClients.put(nickname, new ClientData(toClient, fromClient));
+	}
+	
 	/**
 	 * Return an ArrayList containing the nicknames of all connected clients.
 	 * @return An ArrayList<String> containing the nicknames of all connected clients.
