@@ -42,8 +42,8 @@ public class Server {
 		        
 		        System.out.println("Received new Client.");
 		        
-		        ObjectInputStream streamFromClient = new ObjectInputStream(client.getInputStream());
 		        ObjectOutputStream streamToClient = new ObjectOutputStream(client.getOutputStream());
+		        ObjectInputStream streamFromClient = new ObjectInputStream(client.getInputStream());
 		        
 		        System.out.println("Opened Object IO Streams toClient : " + streamToClient + "  and fromClient : " + streamFromClient);
 		        
