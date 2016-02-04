@@ -82,7 +82,40 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Gets messages from client and puts them in a queue, for another
+	 * thread to forward to the appropriate client.
+	 * @author TauOmicronMu
+	 *
+	 */
 	public static class ServerReceiver {
-		//TODO : Implement this.
+	    
+		private String myClientsName;
+		private ObjectInputStream client;
+		private ConnectedClientData clientData;
+		
+		public ServerReceiver(String myClientsName, ObjectInputStream client, ConnectedClientData clientData) {
+			this.myClientsName = myClientsName;
+			this.client = client;
+			this.clientData = clientData;
+		}
+		
+		public void run() {
+			try {
+				// Read the next message in the input stream to the server.
+				Message message = this.client.readObject();
+				// If the message is null, kill the process.
+				if(message != null){
+					//TODO : Handle messages here.
+				}
+				else {
+					client.close();
+					Constants.errorAndEnd("Message was null in input stream for " + myClientsName);
+				}
+			}
+			catch (IOException e) {
+				Constants.errorAndEnd("Something went wrong with the client (I/O Exception).");
+			}
+		}
 	}
 }

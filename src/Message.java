@@ -27,7 +27,7 @@ public class Message implements Serializable {
 	 * The command detailing what to do with the data -
 	 * for example, "EndGame".
 	 */
-	private final String messageCommand;
+	private final Type messageCommand;
 	
 	/*
 	 * Holds data specific to the type of message to be sent. 
@@ -75,4 +75,8 @@ public class Message implements Serializable {
 		return timestamp;
 	}
 
+	public enum Type {
+		//TODO : Add types when needed.
+	}
+	
 }
