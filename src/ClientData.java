@@ -13,15 +13,18 @@ public class ClientData {
 	private int score;
 	private boolean busy;
 	
-	private final ServerSender toClient;
-	private final ServerReceiver fromClient;
+	private final Server.ServerSender toClient;
+	private final Server.ServerReceiver fromClient;
 	
 	private BlockingQueue<Message> messages;
 	
-	public ClientData(ServerSender toClient, ServerReciever fromClient) {
+	public ClientData(Server.ServerSender toClient, Server.ServerReceiver fromClient) {
 		this.setScore(0);
 		this.setBusy(false);
 		this.setMessages(new LinkedBlockingQueue<>());
+		
+		this.toClient = toClient;
+		this.fromClient = fromClient;
 	}
 
 	public synchronized int getScore() {
@@ -58,6 +61,14 @@ public class ClientData {
 	
 	public void addMessage(Message message) {
 		this.messages.add(message);
+	}
+
+	public Server.ServerSender getToClient() {
+		return toClient;
+	}
+
+	public Server.ServerReceiver getFromClient() {
+		return fromClient;
 	}
 }
 

@@ -54,10 +54,10 @@ public class ConnectedClientData {
 	}
 	
 	public synchronized Message getFirstClientMessage(String nickname) {
-		this.connectedClients.get(nickname);
+		return this.connectedClients.get(nickname).getFirstMessage();
 	}
 	
-	public void addNewClient(String nickname, ServerSender toClient, ServerReceiver fromClient) {
+	public void addNewClient(String nickname, Server.ServerSender toClient, Server.ServerReceiver fromClient) {
 		for(String name : getConnectedClients()) {
 			if(nickname == name) {
 				Constants.errorAndEnd("Server Error : Attempted to create a duplicate record.");

@@ -135,6 +135,8 @@ public class Client {
 			}
 			catch (IOException e) {
 				Constants.errorAndEnd("Error with communication in ClientReceiver (I/O Exception).");
+			} catch (ClassNotFoundException e) {
+				Constants.errorAndEnd("Error with communication in ClientReceiver (ClassNotFound Exception).");
 			}
 		}
 	}

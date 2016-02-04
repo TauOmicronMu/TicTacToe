@@ -36,17 +36,18 @@ public class Server {
 			try {
 		        Socket client = serverSocket.accept();
 		        
-		        ObjectInputStream fromClient = new ObjectInputStream(client.getInputStream());
+		        ObjectInputStream streamFromClient = new ObjectInputStream(client.getInputStream());
+		        ObjectOutputStream streamToClient = new ObjectOutputStream(client.getOutputStream());
 		        
 		        //Get the client's name.
-		        String clientName = fromClient.readUTF();
+		        String clientName = streamFromClient.readUTF();
 		        
 		        //TODO : Check whether or not the name is in use, and if it is, 
 		        //       generate a number recursively, and append it to the name.
 		    
 		        //TODO : Create 2 threads for the client.
-		        ServerSender toClient = new ServerSender();
-		        ServerReceiver fromClient = new ServerReceiver();
+		        ServerSender toClient = new ServerSender(clientName, connectedClientData, streamToClient);
+		        ServerReceiver fromClient = new ServerReceiver(clientName, streamFromClient, connectedClientData);
 		        
 		        //Create a "Record" in ConnectedClientData for the new client.
 		        connectedClientData.addNewClient(clientName, toClient, fromClient);
@@ -66,19 +67,33 @@ public class Server {
 	 */
 	public static class ServerSender {
 		
-		private ClientData clientdata;
+		private String clientName;
+		private ConnectedClientData connectedClientData;
 		private ObjectOutputStream client;
 		
-		public ServerSender(ClientData clientData, ObjectOutputStream client) {
-			this.clientdata = clientdata;
+		public ServerSender(String clientName, ConnectedClientData connectedClientData, ObjectOutputStream client) {
+			this.clientName = clientName;
+			this.connectedClientData = connectedClientData;
 			this.client = client;
 		}
 		
 		public void run() {
 			while(true) {
-				Message message = this.clientdata.getFirstMessage();
-				client.writeObject(message);
+				Message message = this.connectedClientData.getClientData(this.clientName).getFirstMessage();
+				try {
+					client.writeObject(message);
+				} catch (IOException e) {
+					Constants.errorAndEnd("Error writing message to Output Stream (I/O Exception).");
+				}
 			}
+		}
+
+		public ConnectedClientData getConnectedClientData() {
+			return this.connectedClientData;
+		}
+
+		public void setConnectedClientData(ConnectedClientData connectedClientData) {
+			this.connectedClientData = connectedClientData;
 		}
 	}
 	
@@ -103,7 +118,7 @@ public class Server {
 		public void run() {
 			try {
 				// Read the next message in the input stream to the server.
-				Message message = this.client.readObject();
+				Message message = (Message) this.client.readObject();
 				// If the message is null, kill the process.
 				if(message != null){
 					//TODO : Handle messages here.
@@ -115,6 +130,8 @@ public class Server {
 			}
 			catch (IOException e) {
 				Constants.errorAndEnd("Something went wrong with the client (I/O Exception).");
+			} catch (ClassNotFoundException e) {
+				Constants.errorAndEnd("Something went wrong with the client (ClassNotFound Exception).");
 			}
 		}
 	}

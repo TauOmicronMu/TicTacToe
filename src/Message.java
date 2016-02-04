@@ -34,7 +34,7 @@ public class Message implements Serializable {
 	 */
 	private final Object data;
 	
-	public Message(String fromClient, String messageCommand, Object data) {
+	public Message(String fromClient, Message.Type messageCommand, Object data) {
 		
 		this.fromClient = fromClient;
 		this.messageCommand = messageCommand;
@@ -55,7 +55,7 @@ public class Message implements Serializable {
 	 * Returns the messageCommand attribute of the Message.
 	 * @return The command detailing what to do with the data.
 	 */
-	public String getMessageCommand() {
+	public Message.Type getMessageCommand() {
 		return messageCommand;
 	}
 
