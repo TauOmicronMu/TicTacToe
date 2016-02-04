@@ -22,6 +22,8 @@ public class Server {
 
 	public static void main(String[] args) {
 		ConnectedClientData connectedClientData = new ConnectedClientData();
+		
+		System.out.println("Created new connectedClientData : " + connectedClientData);
 	
 		ServerSocket serverSocket = null;
 	
@@ -32,26 +34,42 @@ public class Server {
 			Constants.errorAndEnd("Something went wrong opening the ServerSocket (IO Exception). Please try again.");
 		}
 		
+		System.out.println("Created new ServerSocket : " + serverSocket);
+		
 		while(true) {
 			try {
 		        Socket client = serverSocket.accept();
 		        
+		        System.out.println("Received new Client.");
+		        
 		        ObjectInputStream streamFromClient = new ObjectInputStream(client.getInputStream());
 		        ObjectOutputStream streamToClient = new ObjectOutputStream(client.getOutputStream());
 		        
-		        //Get the client's name.
-		        String clientName = streamFromClient.readUTF();
+		        System.out.println("Opened Object IO Streams toClient : " + streamToClient + "  and fromClient : " + streamFromClient);
+		        
+		        String clientName = null;
+		        
+		        try {
+		            clientName = streamFromClient.readUTF();
+		        }
+		        catch (IOException e) {
+		            Constants.errorAndEnd("Error Reading clientName from Input Stream (I/O Exception).");
+		        }
+		        
+		        System.out.println("Client's name is : " + clientName);
 		        
 		        //TODO : Check whether or not the name is in use, and if it is, 
 		        //       generate a number recursively, and append it to the name.
 		    
 		        //TODO : Create 2 threads for the client.
-		        ServerSender toClient = new ServerSender(clientName, connectedClientData, streamToClient);
-		        ServerReceiver fromClient = new ServerReceiver(clientName, streamFromClient, connectedClientData);
+		        ServerSender sender = new ServerSender(clientName, connectedClientData, streamToClient);
+		        ServerReceiver receiver = new ServerReceiver(clientName, streamFromClient, connectedClientData);
+		        
+		        System.out.println("Created ServerSender : " + sender + " and ServerReceiver : " + receiver + " Threads.");
 		        
 		        //Create a "Record" in ConnectedClientData for the new client.
-		        connectedClientData.addNewClient(clientName, toClient, fromClient);
-		    
+		        connectedClientData.addNewClient(clientName, sender, receiver);
+		        System.out.println("Created a 'record' in ConnectedClientData for " + clientName);
 			}
 			catch(IOException e) {
 				Constants.errorAndEnd("Something went wrong accepting a client connection (IO Exception). Please try again.");

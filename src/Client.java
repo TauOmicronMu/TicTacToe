@@ -57,6 +57,8 @@ public class Client {
 			Constants.errorAndEnd("Something went wrong opening the socket to the server (IO Exception). Please try again.");
 		}
 		
+		System.out.println("Connected to server at " + hostname + ":" + args[2]);
+		
 		ObjectOutputStream toServer = null;
 		ObjectInputStream fromServer = null;
 		
@@ -67,12 +69,17 @@ public class Client {
 		catch(IOException e){
 			Constants.errorAndEnd("Something went wrong opening the I/O Streams (I/O Exception). Please try again.");
 		}
+		System.out.println("Opened Object IO Streams toServer : " + toServer + " and fromServer : " + fromServer);
 		
 		ClientSender sender = new ClientSender(nickname, toServer);
 		ClientReceiver receiver = new ClientReceiver(fromServer);
 		
+		System.out.println("Created ClientSender : " + sender + " and ClientReceiver : " + receiver + " Threads.");
+		
 		sender.start();
 		receiver.start();
+		
+		System.out.println("Started both Threads.");
 	}
     
 	/**
