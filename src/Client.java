@@ -1,7 +1,15 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
 
 public class Client {
 
@@ -66,6 +74,30 @@ public class Client {
 		//       there is no need for 2 threads.
         
 		//TODO : Display a JList that holds all client names with a busy state of false.
-		//TODO : Make the JList elements selectable.
+		
+	}
+	
+	@SuppressWarnings("serial")
+	public static class ConnectedClientList extends JFrame {
+		private JPanel backPlate;
+		private JList clientList;
+		private ArrayList<String> clients;
+		
+		public ConnectedClientList(ArrayList<String> clients) {
+			this.clients = clients;
+			setTitle("TicTacToe Lobby");
+			//TODO : Set size to fit.
+			setBackground(Color.BLUE);
+			
+			backPlate = new JPanel();
+			backPlate.setLayout( new BorderLayout() );
+			getContentPane().add(this.backPlate);
+			
+			String[] connectedClientArray = new String[this.clients.size()];
+			connectedClientArray = (String[]) this.clients.toArray();
+			
+			clientList = new JList<String>(connectedClientArray);
+			backPlate.add(clientList, BorderLayout.CENTER);
+		}
 	}
 }
