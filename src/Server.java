@@ -48,14 +48,16 @@ public class Server {
 		        System.out.println("Opened Object IO Streams toClient : " + streamToClient + "  and fromClient : " + streamFromClient);
 		        
 		        String clientName = null;
-		        
-		        try {
-		            clientName = streamFromClient.readUTF();
-		        }
-		        catch (IOException e) {
-		            Constants.errorAndEnd("Error Reading clientName from Input Stream (I/O Exception).");
-		        }
-		        
+
+		        boolean received = false;
+		        while(!received) {
+		            try {
+		        	    clientName = streamFromClient.readUTF();
+		            }
+		            catch (Exception e) {
+		            	System.out.println("Feck off u cheky cunt");
+		            }
+		        } 
 		        System.out.println("Client's name is : " + clientName);
 		        
 		        //TODO : Check whether or not the name is in use, and if it is, 

@@ -71,7 +71,7 @@ public class Client {
 		}
 		System.out.println("Opened Object IO Streams toServer : " + toServer + " and fromServer : " + fromServer);
 		
-		ClientSender sender = new ClientSender(nickname, toServer);
+		ClientSender sender = new ClientSender(nickname, toServer, fromServer);
 		ClientReceiver receiver = new ClientReceiver(fromServer);
 		
 		System.out.println("Created ClientSender : " + sender + " and ClientReceiver : " + receiver + " Threads.");
@@ -91,10 +91,12 @@ public class Client {
 		
 		private String nickname;
 		private ObjectOutputStream server;
+		private ObjectInputStream server2;
 		
-		public ClientSender(String nickname, ObjectOutputStream server){
+		public ClientSender(String nickname, ObjectOutputStream server, ObjectInputStream server2){
 		    this.nickname = nickname;
 		    this.server = server;
+		    this.server2 = server2;
 		}
 		
 		public void run() {
@@ -110,7 +112,10 @@ public class Client {
 			 * will be generated recursively and appended to the nickname.
 			 */
 			try {
-				server.writeUTF(nickname);
+				System.out.println("PRECUNT");
+				server.writeUTF(nickname); //THE SOURCE OF ALL EVIL (THE SOURCE OF THE PROBLEM!) MMM SAUCE... FUCK I'M HUNGRY.
+				System.out.println(server2.readUTF());
+				System.out.println("CUNT");
 		            
 				//TODO : Add the protocol here.  
 			}	
