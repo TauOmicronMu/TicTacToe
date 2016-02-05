@@ -24,20 +24,35 @@ public class Client {
 		ObjectOutputStream toServer = null;
 		//Attempt to open an input and output stream to/from the server.
 		try {
-			fromServer = new ObjectInputStream(socket.getInputStream());
+			System.out.println("Started opening I/O Streams.");
 			toServer = new ObjectOutputStream(socket.getOutputStream());
+			System.out.println("Opened ObjectOutputStream");
+			fromServer = new ObjectInputStream(socket.getInputStream());
+			System.out.println("Opened ObjectInputStream");
 			toServer.flush();
 		}
 		catch (Exception e){
 		    Constants.errorAndEnd("Something went wrong opening and flushing the I/O Stream.");
-		} 
+		}
+		
+		try {
+			byte[] hello = new byte[5];
+			fromServer.read(hello);
+			System.out.println(new String(hello));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		
 		//Attempt to send our nickname to the server. The server will respond to us, telling us what our nickname is.
 		try {
-			toServer.writeObject(args[1]);
+			toServer.writeObject(args[0]);
+			System.out.println("Wrote nickname to Output Stream.");
 		} 
 		catch (IOException e) {
 			Constants.errorAndEnd("Something went wrong sending the nickname to the server.");
 		}
+		
+		//TODO : create a thread to constantly get input to the server - do everything else directly in here,
+		//       there is no need for 2 threads.
 	}
 }

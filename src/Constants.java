@@ -26,4 +26,18 @@ public class Constants {
 		System.err.println(errorMessage);
 		System.exit(1);
 	}
+	
+	
+	public final static String getUnusedUsername(String nickname, ConnectedClientData connectedClients) {
+		int n = 0;
+		for(String name : connectedClients.getConnectedClients()) {
+            if(name.equals(nickname)) {
+            	n++;
+            }
+		}
+		if(n != 0 ){
+			return (nickname + n);
+		}
+		return nickname;
+	}
 }
