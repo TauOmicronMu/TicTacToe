@@ -1,4 +1,4 @@
-package example;
+
 import java.io.*;
 
 
@@ -26,10 +26,28 @@ public class ClientSender extends Thread {
 
       // Then loop forever sending messages to recipients via the server:
       while (true) {
-        String recipient = user.readLine();
-        String text = user.readLine();
-        server.println(recipient);
-        server.println(text);
+    	//Protocol 
+        String command1 = user.readLine().toLowerCase();
+        switch(command1) {
+        case "playwith" : 
+        	String command2 = user.readLine();
+        	server.println(command1);
+        	server.println(command2);
+        	break;
+        case "quit" : 
+        	System.exit(0);
+        	break; 
+        case "end" : 
+        	server.println(command1);
+        	break;
+        case "list" :
+        	//TODO : print connected users.
+        	break;
+        default : 
+        	String command3 = user.readLine();
+        	server.println(command1);
+        	server.println(command3);
+        }
       }
     }
     catch (IOException e) {

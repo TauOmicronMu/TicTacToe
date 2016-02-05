@@ -1,79 +1,66 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+
+// Usage:
+//        java Server
+//
+// There is no provision for ending the server gracefully.  It will
+// end if (and only if) something exceptional happens.
+
+
+import java.net.*;
+import java.io.*;
 
 public class Server {
 
-	public static void main(String[] args) throws IOException, ClassNotFoundException {
-		//Create a new ConnectedClientData
-		ConnectedClientData connectedClients = new ConnectedClientData();
-		
-		//Attempt to open a ServerSocket on port Constants.PORT.
-		ServerSocket serverSocket = null;
-		try {
-			serverSocket = new ServerSocket(Constants.PORT);
-		}
-		catch (Exception e) {
-			Constants.errorAndEnd("Something went wrong opening the ServerSocket on port : " + Constants.PORT + " .");
-		}
-	  
-		//Wait for a client to connect.
-		while(true) {
-			Socket client = serverSocket.accept();
-		    System.out.println("Client connected.");
-			
-		    //Debugging 
-		    //System.out.println("Client : " + client);
-			
-		    //Grab the I/O Streams from the client.
-			ObjectInputStream fromClient = null;
-			ObjectOutputStream toClient = null;
-		    
-			/*
-			 * ALWAYS OPEN OUTPUT BEFORE INPUT BECAUSE IT WON'T WORK OTHERWISE,
-			 * BECAUSE JAVA HAS REALLY WEIRD QUIRKS.
-			 */
-			try {
-				System.out.println("Started trying to get IO streams.");
-				
-				toClient = new ObjectOutputStream(client.getOutputStream());
-			    System.out.println("Got ObjectOutputStream.");
-			    
-				fromClient = new ObjectInputStream(client.getInputStream());
-			    System.out.println("Got ObjectInputStream.");
-			    
-			    /*
-			     * Debugging
-			     */
-			    //toClient.write("Hello".getBytes());
-			    //toClient.flush();
-			}
-			catch (Exception e) {
-				Constants.errorAndEnd("Something went wrong opening and flushing the streams to/from the client.");
-			}
-			
-			//Try reading the client's nickname from the input stream.
-			String clientName = null;
-			try {
-			    clientName = (String) fromClient.readObject();
-			    System.out.println("Successfully read Client's nickname from stream : " + clientName);
-			}
-			catch (Exception e) {
-			    Constants.errorAndEnd("Error reading clientName in Server - not a string.");
-			}
+  public static void main(String [] args) {
 
-			//Allocate a unique username to the client.
-			String finalClientName = Constants.getUnusedUsername(clientName, connectedClients);
-			
-			//TODO : Echo this username back to the client.
-			
-			//Debugging
-			//System.out.println("Final client name : " + finalClientName);
-			
-			//Create a new record in connectedClients with the new client's name.
-			connectedClients.addNewClient(finalClientName);
-		}
- 	}	
+    // This will be shared by the server threads:
+    ClientTable clientTable = new ClientTable();
+
+    // Open a server socket:
+    ServerSocket serverSocket = null;
+
+    // We must try because it may fail with a checked exception:
+    try {
+      serverSocket = new ServerSocket(Port.number);
+    } 
+    catch (IOException e) {
+      System.err.println("Couldn't listen on port " + Port.number);
+      System.exit(1); // Give up.
+    }
+
+    // Good. We succeeded. But we must try again for the same reason:
+    try { 
+      // We loop for ever, as servers usually do:
+
+      while (true) {
+        // Listen to the socket, accepting connections from new clients:
+        Socket socket = serverSocket.accept();
+
+        // This is so that we can use readLine():
+        BufferedReader fromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+        // We ask the client what its name is:
+        String clientName = fromClient.readLine();
+
+        // For debugging:
+        System.out.println(clientName + " connected");
+
+        // We add the client to the table:
+        clientTable.add(clientName);
+
+        // We create and start a new thread to read from the client:
+        (new ServerReceiver(clientName, fromClient, clientTable)).start();
+
+        // We create and start a new thread to write to the client:
+        PrintStream toClient = new PrintStream(socket.getOutputStream());
+        (new ServerSender(clientTable.getQueue(clientName), toClient)).start();
+      }
+    } 
+    catch (IOException e) {
+      // Lazy approach:
+      System.err.println("IO error " + e.getMessage());
+      // A more sophisticated approach could try to establish a new
+      // connection. But this is beyond this simple exercise.
+    }
+  }
 }

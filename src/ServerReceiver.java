@@ -1,4 +1,4 @@
-package example;
+
 import java.net.*;
 import java.io.*;
 
@@ -19,8 +19,16 @@ public class ServerReceiver extends Thread {
   public void run() {
     try {
       while (true) {
-        String recipient = myClient.readLine();
-        String text = myClient.readLine();
+        String command1 = myClient.readLine();
+        String command2 = myClient.readLine();
+        
+        switch (command1) {
+        case "playwith" : ;
+        case "quit" : ;
+        case "end" : ;
+        case "list" : ;
+        }
+        /*
         if (recipient != null && text != null) {
           Message msg = new Message(myClientsName, text);
           MessageQueue recipientsQueue = clientTable.getQueue(recipient);
@@ -34,6 +42,7 @@ public class ServerReceiver extends Thread {
           myClient.close();
           return;
         }
+        */
       }
     }
     catch (IOException e) {
