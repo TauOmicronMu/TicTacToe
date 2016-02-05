@@ -21,5 +21,4 @@ public class ClientTable {
   public MessageQueue getQueue(String nickname) {
     return queueTable.get(nickname);
   }
-
 }
