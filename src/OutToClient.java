@@ -16,15 +16,13 @@ import java.io.ObjectOutputStream;
 			this.clientName = clientName;
 			this.connectedClientData = connectedClientData;
 			this.toClient = toClient;
-			
-			this.run();
 		}
 		
 		public void run() {
 			while(true) {
 				//Grab the first message in the queue.
 				Message message = this.connectedClientData.getClientData(clientName).getFirstMessage();
-				
+
 				//Put the message into the output stream.
 				try {
 					this.toClient.writeObject(message);

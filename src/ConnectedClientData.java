@@ -1,3 +1,5 @@
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -84,6 +86,14 @@ public class ConnectedClientData {
 	
 	public void removeClient(String nickname) {
 		this.connectedClients.remove(nickname);
+	}
+	
+	public void addInputStream(String nickname, ObjectInputStream fromClient) {
+		this.getClientData(nickname).addInputStream(fromClient);
+	}
+	
+	public void addOutputStream(String nickname, ObjectOutputStream toClient) {
+		this.getClientData(nickname).addOutputStream(toClient);
 	}
 	
 }

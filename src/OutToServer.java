@@ -50,6 +50,7 @@ import java.util.Scanner;
 					} catch (IOException e) {
 						Constants.errorAndEnd("Error writing/flushing PLAYERDISCONNECT message to Output Stream (I/O Exception). ");
 					}
+		    		System.exit(0);
 		    		break;
 		    	case "playwith" :
 		    		break;

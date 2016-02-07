@@ -1,3 +1,5 @@
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -12,10 +14,16 @@ public class ClientData {
 	
 	private BlockingQueue<Message> messages;
 	
+	private ObjectInputStream fromClient;
+	private ObjectOutputStream toClient;
+	
 	public ClientData() {
 		this.setScore(0);
 		this.setBusy(false);
 		this.setMessages(new LinkedBlockingQueue<>());
+		
+		this.fromClient = null;
+		this.toClient = null;
 	}
 
 	public synchronized int getScore() {
@@ -39,7 +47,13 @@ public class ClientData {
 	}
 
 	public Message getFirstMessage() {
-	    return this.messages.remove();	
+	    try {
+			return this.messages.take();
+		} 
+	    catch (InterruptedException e) {
+		    Constants.errorAndEnd("Error getting first message - interrupted.");	
+		}	
+	    return null;
 	}
 	
 	public BlockingQueue<Message> getMessages() {
@@ -52,6 +66,22 @@ public class ClientData {
 	
 	public void addMessage(Message message) {
 		this.messages.add(message);
+	}
+	
+	public void addInputStream(ObjectInputStream fromClient) {
+		this.fromClient = fromClient;
+	}
+	
+	public void addOutputStream(ObjectOutputStream toClient) {
+		this.toClient = toClient;
+	}
+	
+	public ObjectInputStream getInputStream() {
+		return this.fromClient;
+	}
+	
+	public ObjectOutputStream getOutputStream() {
+		return this.toClient;
 	}
 }
 

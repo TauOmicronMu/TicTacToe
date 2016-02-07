@@ -17,8 +17,6 @@ public class InFromClient extends Thread {
 		this.fromClient = fromClient;
 		this.connectedClientData = connectedClientData;
 		this.clientName = clientName;
-
-		this.run();
 	}
 
 	public void run() {

@@ -29,6 +29,7 @@ public class Server {
 	  
 		//Wait for a client to connect.
 		while(true) {
+			System.out.println("Waiting for new client.");
 			Socket client = serverSocket.accept();
 		    System.out.println("Client connected.");
 			
@@ -98,7 +99,7 @@ public class Server {
 					connectedClients.addClientMessage(clientToMessage, message);
 				}
 			}
-		   
+			
 			//Relay the current list of connected players to the new client.
 			ClientListMessage listMessage = new ClientListMessage("server", connectedClients.getConnectedClients());
 			connectedClients.addClientMessage(finalClientName, listMessage);
@@ -106,11 +107,14 @@ public class Server {
 		    //Create 2 new threads for sending/receiving to/from the client.
 			OutToClient toClientThread = new OutToClient(finalClientName, connectedClients, toClient);
 			InFromClient fromClientThread = new InFromClient(fromClient, connectedClients, finalClientName);
-			
+		
 			//Start the 2 threads.
 			toClientThread.start();
 			fromClientThread.start();
 			
-		}
+			//Add the threads to the ConnectedClientData to stop them from being disposed of.
+			connectedClients.addOutputStream(finalClientName, toClient);
+			connectedClients.addInputStream(finalClientName, fromClient);
+        }
  	}
 }
