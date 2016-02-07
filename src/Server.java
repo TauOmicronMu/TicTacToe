@@ -4,8 +4,14 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.sun.corba.se.impl.orbutil.closure.Constant;
-
+/**
+ * Class holding all of the logic for the Server.
+ * 
+ * USAGE : java Server
+ * 
+ * @author TauOmicronMu
+ *
+ */
 public class Server {
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
@@ -84,14 +90,4 @@ public class Server {
 			connectedClients.addNewClient(finalClientName);
 		}
  	}	
-	
-	/*
-	 * Continuously reads and interprets messages from the client.
-	 */
-	public static class ReceiverThread extends Thread {
-		
-		public void run() {
-			
-		}
-	}
 }

@@ -1,19 +1,31 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
 
+/**
+ * Class holding all of the logic for the client.
+ * 
+ * USAGE : java Client nickname hostname port
+ * 
+ * >> Check if args is the correct length,
+ * >> Attempt to open a socket to hostname:port,
+ * >> If the socket is successfully opened, create 
+ *    input and output streams to/from the server.
+ * >> Sends the requested nickname to the server.
+ * >> Receives a final nickname from the server.
+ * 
+ * @author TauOmicronMu
+ *
+ */
 public class Client {
 
 	public static void main(String[] args) {
+		//Keep track of the state of the client.
+		ClientState clientState = new ClientState(clientList);
+		
 	    //Check correct usage.
 		if(args.length != 3) {
 	    	Constants.errorAndEnd("Invalid usage of args, Usage : java Client nickname hostname port");
@@ -50,17 +62,6 @@ public class Client {
 		    Constants.errorAndEnd("Something went wrong opening and flushing the I/O Stream.");
 		}
 		
-		//Debugging
-		/*
-		try {
-			byte[] hello = new byte[5];
-			fromServer.read(hello);
-			System.out.println(new String(hello));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		*/
-		
 		//Attempt to send our nickname to the server. The server will respond to us, telling us what our nickname is.
 		try {
 			toServer.writeObject(args[0]);
@@ -80,16 +81,99 @@ public class Client {
 			Constants.errorAndEnd("Error receiving final username from Server.");
 		}
 		
-		//TODO : create a thread to constantly get and interpret input from the server - do everything else directly in here,
-		//       there is no need for 2 threads.
-        
-		//TODO : Display a JList that holds all client names with a busy state of false.
+		//Create and start an OutToServer thread that handles all user input and data flow to the Server.
 		
+		OutToServer toServerThread = new OutToServer(clientList, toServer);
+		
+		toServerThread.start();
+		
+		/*
+		 * Handles all input from the server.
+		 */
 		while(true); //Sit the client here for a while...
 	}
 	
+	/**
+	 * Shared resource to keep track of things required by the Client and all associated Threads.
+	 * @author TauOmicronMu
+	 *
+	 */
+	public class ClientState {
+		private boolean inGame;
+		private boolean myTurn;
+		private ArrayList<String> clientList;
+		
+		public ClientState() {
+			this.setInGame(false);
+			this.setMyTurn(false);
+			
+			this.clientList = new ArrayList<String>();
+		}
+
+		public boolean isInGame() {
+			return inGame;
+		}
+
+		public void setInGame(boolean inGame) {
+			this.inGame = inGame;
+		}
+
+		public boolean isMyTurn() {
+			return myTurn;
+		}
+
+		public void setMyTurn(boolean myTurn) {
+			this.myTurn = myTurn;
+		}
+
+        public void addToList(String client) {
+        	this.clientList.add(client);
+        }
+        
+        public void removeFromList(String client) {
+        	this.clientList.remove(this.clientList.indexOf(client));
+        }
+        
+        public ArrayList<String> getClients() {
+        	return this.clientList;
+        }
+		
+	}
+	
+    /**
+     * Keeps track of client input, and sends these to the server.
+     * @author TauOmicronMu
+     *
+     */
+	public class OutToServer extends Thread {
+		
+		private ClientState clientState;
+		private ObjectOutputStream toServer;
+		
+		public OutToServer(ClientState clientState, ObjectOutputStream toServer) {
+			this.clientState = clientState;
+			this.toServer = toServer;
+			
+			this.run();
+		}
+		
+		public void run() {
+			/*
+			 * >> Wait for client input
+			 * >> Depending on input, either:
+			 * >> >> Perform a local task (E.g. list)
+			 * >> >> Send data to server (E.g. playwith)
+			 */
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 	/*
-	@SuppressWarnings("serial")
 	public static class ConnectedClientList extends JFrame {
 		private JPanel backPlate;
 		private JList clientList;

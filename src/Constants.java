@@ -27,19 +27,34 @@ public class Constants {
 		System.exit(1);
 	}
 	
-	
-	public final static String getUnusedUsername(String nickname, ConnectedClientData connectedClients) {
-		int n = 0;
-		String originalName = nickname;
+	/**
+	 * Auxiliary function for gerUnusedUsername.
+	 * @param nickname The nickname requested by the client.
+	 * @param connectedClients The currently connected clients.
+	 * @return Whether or not the requested nickname is in use.
+	 */
+	public final static boolean usernameInUse(String nickname, ConnectedClientData connectedClients) {
 		for(String name : connectedClients.getConnectedClients()) {
-            if(name.equals(nickname)) {
-            	n++;
-            	nickname = originalName + n;
-            }
+			if(name.equals(nickname)) {
+				return true;
+			}
 		}
-		if(n != 0 ){
-			return (originalName + n);
+		return false;
+	}
+	
+	/**
+	 * Returns an unused username, based on the requestedName and the names already in use.
+	 * @param requestedName The nickname requested by the client.
+	 * @param connectedClients The currently connected clients.
+	 * @return A username that is not in use, and as close to the requested name as possible. 
+	 */
+	public final static String getUnusedUsername(String requestedName, ConnectedClientData connectedClients) {
+		int n = 0;
+		String newName = requestedName;
+		while(usernameInUse(newName, connectedClients)) {
+			n++;
+			newName = requestedName + n;
 		}
-		return originalName;
+		return newName;
 	}
 }

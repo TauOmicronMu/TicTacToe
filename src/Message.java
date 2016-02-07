@@ -10,34 +10,34 @@ public class Message implements Serializable {
 	/**
 	 * Default serial ID.
 	 */
-	private static final long serialVersionUID = 1L;
+	protected static final long serialVersionUID = 1L;
 	
 	/*
 	 * The time at the point of Message creation.
 	 */
-	private final Date timestamp;
+	protected final Date timestamp;
 	
 	/*
 	 * The nickname of the client that the Message is being
 	 * sent from.
 	 */
-	private final String fromClient;
+	protected final String sender;
 	
 	/*
 	 * The command detailing what to do with the data -
 	 * for example, "EndGame".
 	 */
-	private final Type messageCommand;
+	protected final MessageType messageType;
 	
 	/*
 	 * Holds data specific to the type of message to be sent. 
 	 */
-	private final Object data;
+	protected final Object data;
 	
-	public Message(String fromClient, Message.Type messageCommand, Object data) {
+	public Message(String sender, Message.MessageType messageType, Object data) {
 		
-		this.fromClient = fromClient;
-		this.messageCommand = messageCommand;
+		this.sender = sender;
+		this.messageType = messageType;
 		this.data = data;
 		
 		this.timestamp = new Date();
@@ -47,16 +47,16 @@ public class Message implements Serializable {
 	 * Returns the fromClient attribute of the Message.
 	 * @return The nickname of the client that the Message is being sent from.
 	 */
-	public String getFromClient() {
-		return fromClient;
+	public String getSender() {
+		return sender;
 	}
     
 	/**
 	 * Returns the messageCommand attribute of the Message.
 	 * @return The command detailing what to do with the data.
 	 */
-	public Message.Type getMessageCommand() {
-		return messageCommand;
+	public Message.MessageType getMessageCommand() {
+		return messageType;
 	}
 
 	/**
@@ -75,8 +75,8 @@ public class Message implements Serializable {
 		return timestamp;
 	}
 
-	public enum Type {
-		//TODO : Add types when needed.
+	public enum MessageType {
+		PLAYERJOINED
 	}
 	
 }
