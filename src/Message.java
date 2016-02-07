@@ -76,7 +76,7 @@ public class Message implements Serializable {
 	}
 
 	public enum MessageType {
-		PLAYERJOINED
+		PLAYERJOINED, PLAYERDISCONNECT
 	}
 	
 }

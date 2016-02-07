@@ -88,6 +88,23 @@ public class Server {
 			
 			//Create a new record in connectedClients with the new client's name.
 			connectedClients.addNewClient(finalClientName);
+	
+			
+	    	//TODO : Relay a PLAYERJOINED message to all clients except this client.
+		   
+			//TODO : Relay the current list of connected players to the new client.
+			
+		    //TODO : Create 2 new threads for sending/receiving to/from the client.
+			
 		}
- 	}	
+ 	}
+	
+	/**
+	 * Constantly wait for and interpret messages from the given client.
+	 * @author TauOmicronMu
+	 *
+	 */
+	public class InFromClient extends Thread {
+		
+	}
 }
