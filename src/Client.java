@@ -92,7 +92,51 @@ public class Client {
 		 * Handles all input from the server.
 		 */
 		while(true) {
-			//TODO : Grab and handle messages from the server.
+			Message message = null;
+			//Attempt to grab a message from the input stream.
+			try {
+				message = (Message) fromServer.readObject();
+			} 
+			catch (ClassNotFoundException e) {
+				Constants.errorAndEnd("Error reading message from server (ClassNotFound Exception).");
+			}
+			catch (IOException e) {
+				Constants.errorAndEnd("Error reading message from server (I/O Exception).");
+			}
+			
+			MessageType command = message.getMessageCommand();
+			switch(command) {
+			case PLAYERDISCONNECT :
+				try {
+					clientState.removeFromList((String) message.getData());
+				}
+				catch (Exception e) {
+					Constants.errorAndEnd("Error when processing PLAYERDISCONNECT message. Data was not of type : String.");
+				}
+				break;
+			case PLAYERJOINED :
+				try {
+					clientState.addToList((String) message.getData());
+				}
+				catch (Exception e) {
+					Constants.errorAndEnd("Error when processing PLAYERJOINED message. Data was not of type : String.");
+				}
+				break;
+			case CLIENTLIST :
+				if(message.getData() instanceof ArrayList<?>) {
+					try {
+						//Make the list equal to the new list of connected clients.
+			            clientState.setClientList((ArrayList<String>) message.getData()); 
+					}
+					catch (Exception e) {
+						Constants.errorAndEnd("Error when processing CLIENTLIST message. Data was not of type : ArrayList<String>.");
+					}
+				}
+				else {
+					Constants.errorAndEnd("Error when processing CLIENTLIST message. Data was not of type : ArrayList<?>.");
+				}
+			    break;
+			}
 		}
 	}
 	

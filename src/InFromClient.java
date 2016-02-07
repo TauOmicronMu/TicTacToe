@@ -52,6 +52,11 @@ public class InFromClient extends Thread {
 				 * The server will never receive this message.
 				 */
 				break;
+			case CLIENTLIST :
+				/*
+				 * The server will never receive this message.
+				 */
+				break;
 			}
 		}
 	}

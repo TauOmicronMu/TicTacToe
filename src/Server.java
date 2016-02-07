@@ -99,8 +99,9 @@ public class Server {
 				}
 			}
 		   
-			//TODO : Relay the current list of connected players to the new client.
-			
+			//Relay the current list of connected players to the new client.
+			ClientListMessage listMessage = new ClientListMessage("server", connectedClients.getConnectedClients());
+			connectedClients.addClientMessage(finalClientName, listMessage);
 			
 		    //Create 2 new threads for sending/receiving to/from the client.
 			OutToClient toClientThread = new OutToClient(finalClientName, connectedClients, toClient);

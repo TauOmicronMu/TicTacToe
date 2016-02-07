@@ -48,5 +48,9 @@ import java.util.ArrayList;
         public int howManyClients() {
         	return this.clientList.size();
         }
+        
+        public void setClientList(ArrayList<String> newList) {
+        	this.clientList = newList;
+        }
 		
 	}
