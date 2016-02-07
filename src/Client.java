@@ -84,14 +84,16 @@ public class Client {
 		
 		//Create and start an OutToServer thread that handles all user input and data flow to the Server.
 		
-		OutToServer toServerThread = new OutToServer((clientState), toServer);
+		OutToServer toServerThread = new OutToServer((clientState), toServer, finalClientName);
 		
 		toServerThread.start();
 		
 		/*
 		 * Handles all input from the server.
 		 */
-		while(true); //Sit the client here for a while...
+		while(true) {
+			//TODO : Grab and handle messages from the server.
+		}
 	}
 	
 	/*

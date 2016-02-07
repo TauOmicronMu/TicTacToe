@@ -34,7 +34,7 @@ public class Message implements Serializable {
 	 */
 	protected final Object data;
 	
-	public Message(String sender, Message.MessageType messageType, Object data) {
+	public Message(String sender, MessageType messageType, Object data) {
 		
 		this.sender = sender;
 		this.messageType = messageType;
@@ -55,7 +55,7 @@ public class Message implements Serializable {
 	 * Returns the messageCommand attribute of the Message.
 	 * @return The command detailing what to do with the data.
 	 */
-	public Message.MessageType getMessageCommand() {
+	public MessageType getMessageCommand() {
 		return messageType;
 	}
 
@@ -74,9 +74,4 @@ public class Message implements Serializable {
 	public Date getTimestamp() {
 		return timestamp;
 	}
-
-	public enum MessageType {
-		PLAYERJOINED, PLAYERDISCONNECT
-	}
-	
 }

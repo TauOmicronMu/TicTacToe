@@ -90,21 +90,26 @@ public class Server {
 			connectedClients.addNewClient(finalClientName);
 	
 			
-	    	//TODO : Relay a PLAYERJOINED message to all clients except this client.
+	    	//Relay a PLAYERJOINED message to all clients except this client.
+			PlayerJoinedMessage message = new PlayerJoinedMessage("server", finalClientName);
+			for(String clientToMessage : connectedClients.getConnectedClients()) {
+				//If the client isn't the new client...
+				if(!client.equals(finalClientName)) {
+					connectedClients.addClientMessage(clientToMessage, message);
+				}
+			}
 		   
 			//TODO : Relay the current list of connected players to the new client.
 			
-		    //TODO : Create 2 new threads for sending/receiving to/from the client.
+			
+		    //Create 2 new threads for sending/receiving to/from the client.
+			OutToClient toClientThread = new OutToClient(finalClientName, connectedClients, toClient);
+			InFromClient fromClientThread = new InFromClient(fromClient, connectedClients, finalClientName);
+			
+			//Start the 2 threads.
+			toClientThread.start();
+			fromClientThread.start();
 			
 		}
  	}
-	
-	/**
-	 * Constantly wait for and interpret messages from the given client.
-	 * @author TauOmicronMu
-	 *
-	 */
-	public class InFromClient extends Thread {
-		
-	}
 }

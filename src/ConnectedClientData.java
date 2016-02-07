@@ -82,4 +82,8 @@ public class ConnectedClientData {
 		return currentlyConnected;
 	}
 	
+	public void removeClient(String nickname) {
+		this.connectedClients.remove(nickname);
+	}
+	
 }

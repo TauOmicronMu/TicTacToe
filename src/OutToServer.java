@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
@@ -11,8 +12,9 @@ import java.util.Scanner;
 		private ClientState clientState;
 		private ObjectOutputStream toServer;
 		private Scanner scanner;
+		private String clientName;
 		
-		public OutToServer(ClientState clientState, ObjectOutputStream toServer) {
+		public OutToServer(ClientState clientState, ObjectOutputStream toServer, String clientName) {
 			this.clientState = clientState;
 			this.toServer = toServer;
  
@@ -41,7 +43,13 @@ import java.util.Scanner;
 		            System.out.println("---------------------------------");
 		    		break;
 		    	case "quit" :
-		    		//Send the server a CLIENTDISCONNECT Message.
+		    		Message message = new PlayerDisconnectMessage(this.clientName, this.clientName);
+		    		try {
+						this.toServer.writeObject(message);
+						this.toServer.flush();
+					} catch (IOException e) {
+						Constants.errorAndEnd("Error writing/flushing PLAYERDISCONNECT message to Output Stream (I/O Exception). ");
+					}
 		    		break;
 		    	case "playwith" :
 		    		break;
