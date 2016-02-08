@@ -22,12 +22,14 @@ import java.io.ObjectOutputStream;
 			while(true) {
 				//Grab the first message in the queue.
 				Message message = this.connectedClientData.getClientData(clientName).getFirstMessage();
+				System.out.println("Got a message for : " + clientName + " from the queue.");
 
 				//Put the message into the output stream.
 				try {
 					this.toClient.writeObject(message);
 					//Make sure that the message reaches the client.
 					this.toClient.flush();
+					System.out.println("Wrote and flushed the message for : " + clientName + " to the Output stream.");
 				} 
 				catch (IOException e) {
 					Constants.errorAndEnd("Something went wrong writing/flushing a client message to the Output Stream (I/O Exception).");

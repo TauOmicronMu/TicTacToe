@@ -19,8 +19,6 @@ import java.util.Scanner;
 			this.toServer = toServer;
  
 			this.scanner = new Scanner(System.in);
-			
-			this.run();
 		}
 		
 		public void run() {
