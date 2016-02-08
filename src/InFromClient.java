@@ -29,7 +29,8 @@ public class InFromClient extends Thread {
 				Constants.errorAndEnd("Error reading message from client (ClassNotFound Exception). ");
 			} 
 			catch (IOException e) {
-				Constants.errorAndEnd("Error reading message from client (I/O Exception). ");
+				//At this point, the client has disconnected. For now, ignore this.
+				//Constants.errorAndEnd("Error reading message from client (I/O Exception). ");
 			}
 
 			MessageType messageType = message.getMessageCommand();

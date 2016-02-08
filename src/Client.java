@@ -111,6 +111,7 @@ public class Client {
 			case PLAYERDISCONNECT :
 				System.out.println("Received a PLAYERDISCONNECT Message.");
 				try {
+					System.out.println("Message data : " + message.getData());
 					clientState.removeFromList((String) message.getData());
 					System.out.println("Removed player: " + (String) message.getData() + " from client list.");
 				}

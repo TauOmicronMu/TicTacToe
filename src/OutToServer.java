@@ -17,6 +17,7 @@ import java.util.Scanner;
 		public OutToServer(ClientState clientState, ObjectOutputStream toServer, String clientName) {
 			this.clientState = clientState;
 			this.toServer = toServer;
+			this.clientName = clientName;
  
 			this.scanner = new Scanner(System.in);
 		}
