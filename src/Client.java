@@ -87,17 +87,17 @@ public class Client {
 		OutToServer toServerThread = new OutToServer((clientState), toServer, finalClientName);
 		
 		toServerThread.start();
-		
+
 		/*
 		 * Handles all input from the server.
 		 */
 		while(true) {
 			Message message = null;
-			System.out.println("Waiting for Message from server.");
+			//System.out.println("Waiting for Message from server.");
 			//Attempt to grab a message from the input stream.
 			try {
 				message = (Message) fromServer.readObject();
-				System.out.println("Got a Message from the server."); 
+				//System.out.println("Got a Message from the server."); 
 			} 
 			catch (ClassNotFoundException e) {
 				Constants.errorAndEnd("Error reading message from server (ClassNotFound Exception).");
@@ -109,37 +109,45 @@ public class Client {
 			MessageType command = message.getMessageCommand();
 			switch(command) {
 			case PLAYERDISCONNECT :
-				System.out.println("Received a PLAYERDISCONNECT Message.");
+				//System.out.println("Received a PLAYERDISCONNECT Message.");
 				try {
-					System.out.println("Message data : " + message.getData());
+					//System.out.println("Message data : " + message.getData());
 					clientState.removeFromList((String) message.getData());
-					System.out.println("Removed player: " + (String) message.getData() + " from client list.");
+					//System.out.println("Removed player: " + (String) message.getData() + " from client list.");
 				}
 				catch (Exception e) {
 					Constants.errorAndEnd("Error when processing PLAYERDISCONNECT Message. Data was not of type : String.");
 				}
 				break;
 			case PLAYERJOINED :
-				System.out.println("Received a PLAYERJOINED Message.");
+				//System.out.println("Received a PLAYERJOINED Message.");
 				try {
 					clientState.addToList((String) message.getData());
-					System.out.println("Added player: " + (String) message.getData() + " to client list.");
+					//System.out.println("Added player: " + (String) message.getData() + " to client list.");
 				}
 				catch (Exception e) {
 					Constants.errorAndEnd("Error when processing PLAYERJOINED Message. Data was not of type : String.");
 				}
 				break;
 			case CLIENTLIST :
-				System.out.println("Received a CLIENTLIST Message.");
+				//System.out.println("Received a CLIENTLIST Message.");
 				try {
 					//Make the list equal to the new list of connected clients.
 		            clientState.setClientList((ArrayList<String>) message.getData());
-		            System.out.println("Set Client List to : " + (ArrayList<String>) message.getData());
+		            //System.out.println("Set Client List to : " + (ArrayList<String>) message.getData());
 				}
 				catch (Exception e) {
 					Constants.errorAndEnd("Error when processing CLIENTLIST Message. Data was not of type : ArrayList<String>.");
 				}
 			    break;
+			case PLAYREQUEST :
+				//If the client has already been invited, notify the sender.
+				if(clientState.isInvited()) {
+					//Notify the client that sent the request.
+				}
+				else {
+				    clientState.setInvited(true);
+				}
 			}
 		}
 	}

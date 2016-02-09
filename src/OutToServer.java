@@ -47,14 +47,54 @@ import java.util.Scanner;
 						this.toServer.writeObject(message);
 						this.toServer.flush();
 					} catch (IOException e) {
-						Constants.errorAndEnd("Error writing/flushing PLAYERDISCONNECT message to Output Stream (I/O Exception). ");
+						Constants.errorAndEnd("Error writing/flushing PLAYERDISCONNECT Message to Output Stream (I/O Exception). ");
 					}
 		    		System.exit(0);
 		    		break;
 		    	case "playwith" :
+		    		String recipient = scanner.nextLine();
+		    		
+		    		//Check if the recipient even exists.
+		    		if(this.clientState.getClients().contains(recipient)) {
+			    		PlayRequestMessage playmessage = new PlayRequestMessage(this.clientName, recipient);
+			    		try {
+			    			this.toServer.writeObject(playmessage);
+			    			this.toServer.flush();
+			    		}
+			    		catch (IOException e) {
+			    			Constants.errorAndEnd("Error writing/flushing a PLAYREQUEST Message to Output Stream (I/O Exception). ");
+			    		}
+		    		}
+		    		else {
+		    			System.out.println(recipient + " is not currently connected.");
+		    		}
+		    		//TODO : Send a "PLAYREQUEST Message"
 		    		break;
 		    	case "end" :
 		    		break;
+		    	default : 
+		    		//Handle PLAYREQUEST Messages.
+		    		if(this.clientState.isInvited()) {
+		    		    switch (command.toLowerCase()) {
+		    		    case ("y") :
+		    		    	this.clientState.setInvited(false);
+		    		        //TODO : Send a PLAYRESPONSE Message back to the client.
+		    		    	break;
+		    		    case ("yes") :
+		    		    	this.clientState.setInvited(false);
+		    		        //TODO : Send a PLAYRESPONSE Message back to the client.
+		    		    case ("n") :
+		    		    	this.clientState.setInvited(false);
+		    		        //TODO : Send a PLAYRESPONSE Message back to the client.
+		    		    	break;
+		    		    case ("no") :
+		    		    	this.clientState.setInvited(false);
+		    		        //TODO : Send a PLAYRESPONSE Message back to the client.
+		    		        break;
+		    		    default :
+		    		    	System.out.println("That wasn't a valid option. Please respond with yes or no.");
+		    		    }
+		    		}
 		    	}
 		    }
 		}

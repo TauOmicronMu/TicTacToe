@@ -8,6 +8,7 @@ import java.util.ArrayList;
 	public class ClientState {
 		private boolean inGame;
 		private boolean myTurn;
+		private boolean invited;
 		private ArrayList<String> clientList;
 		
 		public ClientState() {
@@ -31,6 +32,14 @@ import java.util.ArrayList;
 
 		public void setMyTurn(boolean myTurn) {
 			this.myTurn = myTurn;
+		}
+		
+		public boolean isInvited() {
+			return invited;
+		}
+		
+		public void setInvited(boolean invited) {
+			this.invited = invited;
 		}
 
         public void addToList(String client) {
