@@ -1,4 +1,4 @@
-Tom Goodman - txg523 - 1526322
+Tom Goodman - txg523
 ==============================
 
 (a) What you implemented.
